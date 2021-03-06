@@ -5,8 +5,8 @@ from dateutil import tz
 
 
 # Authenticate to Twitter
-auth = tweepy.OAuthHandler("8vY1MGJyP5RMt1TIAHaHa0KRU", "oFzAk0JFmDsL2QksP1eORZYPNa13umzbR1SSiUvwkBi3NtjByn")
-auth.set_access_token('1131738695055290370-WfBUslKXoOperT0fO16F87Gf2GwxER', 'JQroHGaVHmbyQpS01TkAkqoXk755GrX5pqX7d4MKCuQrH')
+auth = tweepy.OAuthHandler(# [keys from tweepy]#)
+auth.set_access_token(#[token from tweepy]#)
 api = tweepy.API(auth)
 try:
     api.verify_credentials()
@@ -49,5 +49,4 @@ make_tweet()
 # api.update_status("I'm making a new twitter bot. There might be some weird test tweets.")
 
 
-# Bearer Token:
-# AAAAAAAAAAAAAAAAAAAAAIcoNQEAAAAAfqfJ325NcKMMDqotMscxmBwtUNs%3DpCdm5Pn1Yj1DngLKi3EZuxbOLljhw0mfowkSSCXwI7juzJp9Uj
+#
