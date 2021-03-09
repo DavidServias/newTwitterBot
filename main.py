@@ -1,53 +1,79 @@
-import tweepy
 import datetime
-import time
 from dateutil import tz
+import keys
+import tweepy
 
 
-# Authenticate to Twitter
-auth = tweepy.OAuthHandler("8vY1MGJyP5RMt1TIAHaHa0KRU", "oFzAk0JFmDsL2QksP1eORZYPNa13umzbR1SSiUvwkBi3NtjByn")
-auth.set_access_token('1131738695055290370-WfBUslKXoOperT0fO16F87Gf2GwxER', 'JQroHGaVHmbyQpS01TkAkqoXk755GrX5pqX7d4MKCuQrH')
-api = tweepy.API(auth)
+sandwich = keys.sandwich
+gnosandwich = keys.gnosandwich
+
+# Authenticate sandwich Account
+auth_sandwich = tweepy.OAuthHandler(sandwich["api_key"], sandwich["api_secret"])
+auth_sandwich.set_access_token(sandwich["token_key"], sandwich["token_secret"])
+api_sandwich = tweepy.API(auth_sandwich)
 try:
-    api.verify_credentials()
-    print("Authentication OK")
+    api_sandwich.verify_credentials()
+    print("Sandwich Authentication OK")
 except:
-    print("Error during authentication")
+    print("Error during sandwich authentication")
 
 
-def get_next_isd():
+# Authenticate gnosandwich Account
+auth_gnosandwich = tweepy.OAuthHandler(gnosandwich["api_key"], gnosandwich["api_secret"])
+auth_gnosandwich.set_access_token(gnosandwich["token_key"], gnosandwich["token_secret"])
+api_gnosandwich = tweepy.API(auth_gnosandwich)
+try:
+    api_gnosandwich.verify_credentials()
+    print("Sandwich Authentication OK")
+except:
+    print("Error during sandwich authentication")
+
+
+# get next national sandwich day
+def get_next_date(month, day):
     pacific = tz.gettz("America/Toronto")
     today = datetime.datetime.now(tz=pacific)
     year = today.year
-    if today.month <= 11 and today.day <= 3:
-        next_isd = datetime.datetime(year, 11, 3, 0, 0, 0, 0, pacific)
+    if today.month < month or (today.month == month and today.day <= day):
+        next_date = datetime.datetime(year, month, day, 0, 0, 0, 0, pacific)
     else:
-        next_isd = datetime.datetime((year+1), 11, 3, 0, 0, 0, 0, pacific)
+        next_date = datetime.datetime((year+1), month, day, 0, 0, 0, 0, pacific)
 
-    return next_isd
+    return next_date
 
 
-def make_tweet():
+def update_sandwich_tweet():
     pacific = tz.gettz("America/Toronto")
-    while True:
-        days_to_next_isd = get_next_isd() - datetime.datetime.now(tz=pacific)
-        if days_to_next_isd == 0:
-            tweet_text = "Eat a sandwich today! TODAY IS NATIONAL SANDWICH DAY!!!!!"
-        elif days_to_next_isd == 1:
-            tweet_text = "Stock up on bread and sandwich fixings, because TOMORROW IS NATIONAL SANDWICH DAY!!!!!"
-        else:
-            tweet_text = "There are " + str(days_to_next_isd.days) + " days until National Sandwich Day."
-        print(datetime.datetime.now(tz=pacific))
-        print(tweet_text)
-        # api.update_status(tweet_text)
-        time.sleep(30)
+    days_to_next_nsd = get_next_date(11, 3) - datetime.datetime.now(tz=pacific)
+    if days_to_next_nsd == 0:
+        tweet_text = "Eat a sandwich today! TODAY IS NATIONAL SANDWICH DAY!!!!!"
+    elif days_to_next_nsd == 1:
+        tweet_text = "Stock up on bread and sandwich fixings, because TOMORROW IS NATIONAL SANDWICH DAY!!!!!"
+    else:
+        tweet_text = "There are " + str(days_to_next_nsd.days) + " days until National Sandwich Day."
+    print(datetime.datetime.now(tz=pacific))
+    print(tweet_text)
+    api_sandwich.update_status(tweet_text)
 
 
-make_tweet()
+def update_gnosandwich_tweet():
+    pacific = tz.gettz("America/Toronto")
+    days_to_next_gnosandwich = get_next_date(5,23) - datetime.datetime.now(tz=pacific)
+    if days_to_next_gnosandwich == 0:
+        tweet_text = "Eat anything but a sandwich today, because TODAY IS INTERNATIONAL GNOSANDWICH DAY!!!!! #gnosandwich"
+    elif days_to_next_gnosandwich == 1:
+        tweet_text = "No bread? No problem! TOMORROW IS INTERNATIONAL GNOSANDWICH DAY!!!!! #gnosandwich"
+    else:
+        tweet_text = "There are " + str(days_to_next_gnosandwich.days) + " days until International Gnosandwich Day. #gnosandwich"
+    print(datetime.datetime.now(tz=pacific))
+    print(tweet_text)
+    api_gnosandwich.update_status(tweet_text)
 
 
-# api.update_status("I'm making a new twitter bot. There might be some weird test tweets.")
+update_sandwich_tweet()
+update_gnosandwich_tweet()
 
 
-# Bearer Token:
-# AAAAAAAAAAAAAAAAAAAAAIcoNQEAAAAAfqfJ325NcKMMDqotMscxmBwtUNs%3DpCdm5Pn1Yj1DngLKi3EZuxbOLljhw0mfowkSSCXwI7juzJp9Uj
+
+
+
